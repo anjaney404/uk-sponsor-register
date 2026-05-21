@@ -1,0 +1,7 @@
+{
+  "name": "uk-sponsor-register",
+  "version": "1.0.0",
+  "description": "Interactive dashboard for UK Visa Sponsor Register organisations",
+  "main": "index.html",
+  "license": "MIT"
+}
