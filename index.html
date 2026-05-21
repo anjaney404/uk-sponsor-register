@@ -7,7 +7,6 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/recharts@2.10.0/dist/Recharts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
         * {
@@ -15,122 +14,91 @@
             padding: 0;
             box-sizing: border-box;
         }
- 
+
         :root {
-            --bg-primary: #0a0e27;
-            --bg-secondary: #1a1f3a;
-            --bg-tertiary: #252d4a;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
             --text-primary: #ffffff;
             --text-secondary: #b0b8d4;
+            --border-color: #333333;
             --accent-primary: #00d4ff;
-            --accent-secondary: #6366f1;
-            --accent-tertiary: #ec4899;
-            --border-color: #2d3a5a;
             --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
- 
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
         }
- 
+
         .dashboard-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, #0f1530 50%, var(--bg-primary) 100%);
+            background: var(--bg-primary);
             padding: 20px;
         }
- 
+
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            animation: slideDown 0.6s ease-out;
+            margin-bottom: 30px;
         }
- 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
- 
+
         .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
+            color: var(--text-primary);
         }
- 
+
         .header p {
             color: var(--text-secondary);
             font-size: 1rem;
         }
- 
-        .main-grid {
+
+        .main-layout {
             display: grid;
             grid-template-columns: 250px 1fr;
             gap: 20px;
             max-width: 1600px;
             margin: 0 auto;
         }
- 
+
         .sidebar {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            animation: slideLeft 0.6s ease-out 0.1s both;
         }
- 
-        @keyframes slideLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
- 
+
         .card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 20px;
             box-shadow: var(--shadow);
         }
- 
+
         .kpi-card {
             text-align: center;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(99, 102, 241, 0.1));
-            border: 1px solid rgba(0, 212, 255, 0.3);
+            border: 2px solid var(--border-color);
+            padding: 30px 20px;
         }
- 
+
         .kpi-card h3 {
             color: var(--text-secondary);
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             font-weight: 600;
         }
- 
+
         .kpi-value {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            color: var(--accent-primary);
+            color: var(--text-primary);
             font-variant-numeric: tabular-nums;
         }
- 
+
         .filter-section h3 {
             color: var(--text-primary);
             font-size: 0.9rem;
@@ -139,30 +107,25 @@
             margin-bottom: 15px;
             font-weight: 600;
             padding-bottom: 12px;
-            border-bottom: 2px solid var(--accent-primary);
+            border-bottom: 2px solid var(--text-primary);
         }
- 
-        .filter-group {
+
+        .date-inputs {
+            display: flex;
+            gap: 10px;
             margin-bottom: 15px;
         }
- 
-        .filter-input {
-            width: 100%;
-            padding: 10px 12px;
-            background: var(--bg-tertiary);
+
+        .date-inputs input {
+            flex: 1;
+            padding: 8px;
+            background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 4px;
             color: var(--text-primary);
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            font-size: 0.85rem;
         }
- 
-        .filter-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
-        }
- 
+
         .checkbox-group {
             display: flex;
             flex-direction: column;
@@ -171,20 +134,7 @@
             overflow-y: auto;
             padding-right: 8px;
         }
- 
-        .checkbox-group::-webkit-scrollbar {
-            width: 6px;
-        }
- 
-        .checkbox-group::-webkit-scrollbar-track {
-            background: transparent;
-        }
- 
-        .checkbox-group::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
- 
+
         .checkbox-item {
             display: flex;
             align-items: center;
@@ -192,77 +142,48 @@
             cursor: pointer;
             padding: 6px 8px;
             border-radius: 4px;
-            transition: all 0.2s ease;
         }
- 
+
         .checkbox-item:hover {
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
         }
- 
+
         .checkbox-item input {
             cursor: pointer;
-            accent-color: var(--accent-primary);
+            accent-color: var(--text-primary);
         }
- 
+
         .checkbox-item label {
             cursor: pointer;
             font-size: 0.85rem;
             color: var(--text-secondary);
         }
- 
-        .date-inputs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
- 
-        .date-inputs input {
-            flex: 1;
-            padding: 8px;
-            background: var(--bg-tertiary);
+
+        .filter-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 4px;
             color: var(--text-primary);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
         }
- 
-        .date-inputs input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-        }
- 
+
         .content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            animation: slideRight 0.6s ease-out 0.1s both;
-        }
- 
-        @keyframes slideRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
- 
-        .viz-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
- 
-        .chart-card {
-            grid-column: span 1;
-        }
- 
-        .chart-card.full-width {
+
+        .content > .full-width {
             grid-column: 1 / -1;
         }
- 
+
+        .chart-card {
+            position: relative;
+        }
+
         .chart-card h3 {
             margin-bottom: 15px;
             color: var(--text-primary);
@@ -270,48 +191,47 @@
             font-weight: 600;
             letter-spacing: 0.5px;
         }
- 
+
         .chart-wrapper {
             width: 100%;
-            height: 400px;
+            min-height: 350px;
             display: flex;
             justify-content: center;
             align-items: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 20px;
         }
- 
-        .map-wrapper {
-            width: 100%;
-            height: 500px;
-            border-radius: 8px;
-            overflow: hidden;
+
+        svg {
+            cursor: pointer;
         }
- 
-        iframe {
-            border: none;
-            width: 100%;
-            height: 100%;
+
+        .clickable-bar:hover {
+            opacity: 0.7;
         }
- 
+
         .table-wrapper {
             width: 100%;
-            overflow-x: auto;
             max-height: 500px;
-            border-radius: 8px;
+            border-radius: 4px;
+            overflow: auto;
         }
- 
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
         }
- 
+
         .data-table thead {
             position: sticky;
             top: 0;
-            background: var(--bg-tertiary);
-            border-bottom: 2px solid var(--accent-primary);
+            background: var(--bg-primary);
+            border-bottom: 2px solid var(--text-primary);
         }
- 
+
         .data-table th {
             padding: 12px;
             text-align: left;
@@ -321,111 +241,99 @@
             letter-spacing: 0.5px;
             font-size: 0.75rem;
         }
- 
+
         .data-table td {
             padding: 10px 12px;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-secondary);
         }
- 
+
         .data-table tbody tr:hover {
-            background: rgba(0, 212, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
         }
- 
+
         .loading {
             text-align: center;
             padding: 40px;
             color: var(--text-secondary);
         }
- 
+
         .spinner {
             display: inline-block;
             width: 40px;
             height: 40px;
             border: 3px solid var(--border-color);
-            border-top-color: var(--accent-primary);
+            border-top-color: var(--text-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
- 
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
- 
-        .stats-row {
+
+        .region-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-top: 15px;
         }
- 
-        .stat-item {
+
+        .region-card {
             padding: 15px;
-            background: rgba(0, 212, 255, 0.05);
+            background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
- 
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            text-transform: uppercase;
+
+        .region-card:hover {
+            border-color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .region-card.selected {
+            border-color: var(--accent-primary);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .region-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 8px;
         }
- 
-        .stat-value {
-            font-size: 1.8rem;
+
+        .region-count {
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--accent-primary);
+            color: var(--text-primary);
         }
- 
+
         @media (max-width: 1200px) {
-            .main-grid {
+            .main-layout {
                 grid-template-columns: 1fr;
             }
- 
+
             .sidebar {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 15px;
             }
- 
-            .viz-container {
+
+            .content {
                 grid-template-columns: 1fr;
-            }
-        }
- 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8rem;
-            }
- 
-            .chart-wrapper {
-                height: 300px;
-            }
- 
-            .map-wrapper {
-                height: 300px;
-            }
- 
-            .data-table {
-                font-size: 0.75rem;
-            }
- 
-            .data-table th,
-            .data-table td {
-                padding: 8px;
             }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
- 
+
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
- 
+
         function Dashboard() {
             const [sponsorData, setSponsorData] = useState([]);
             const [locationData, setLocationData] = useState({});
@@ -435,15 +343,15 @@
                 searchIndustry: '',
                 regions: [],
                 industries: [],
+                years: [],
                 startYear: 2013,
                 endYear: 2026
             });
- 
+
             // Load CSV data
             useEffect(() => {
                 async function loadData() {
                     try {
-                        // Load sponsor data
                         const sponsorResponse = await fetch('data/uk_sponsor_register.csv');
                         const sponsorText = await sponsorResponse.text();
                         
@@ -452,13 +360,9 @@
                             skipEmptyLines: true,
                             complete: (results) => {
                                 setSponsorData(results.data);
-                            },
-                            error: (error) => {
-                                console.error('Error parsing sponsor data:', error);
                             }
                         });
- 
-                        // Load location data
+
                         const locationResponse = await fetch('data/IPN_GB_2022.csv');
                         const locationText = await locationResponse.text();
                         
@@ -479,10 +383,6 @@
                                 });
                                 setLocationData(locMap);
                                 setLoading(false);
-                            },
-                            error: (error) => {
-                                console.error('Error parsing location data:', error);
-                                setLoading(false);
                             }
                         });
                     } catch (error) {
@@ -490,20 +390,20 @@
                         setLoading(false);
                     }
                 }
- 
+
                 loadData();
             }, []);
- 
+
             // Process and filter data
             const processedData = useMemo(() => {
                 if (!sponsorData.length) return [];
- 
+
                 return sponsorData.map(row => {
                     const dateAdded = new Date(row['Date Added']);
                     const year = dateAdded.getFullYear();
                     const townKey = (row.Town || '').toLowerCase().trim();
                     const locInfo = locationData[townKey] || {};
- 
+
                     return {
                         ...row,
                         year,
@@ -518,27 +418,26 @@
                     const matchesIndustry = row.Industry?.toLowerCase().includes(filters.searchIndustry.toLowerCase());
                     const matchesRegion = filters.regions.length === 0 || filters.regions.includes(row.region);
                     const matchesIndList = filters.industries.length === 0 || filters.industries.includes(row.Industry);
-                    const matchesYear = row.year >= filters.startYear && row.year <= filters.endYear;
- 
+                    const matchesYear = filters.years.length === 0 || filters.years.includes(row.year);
+
                     return matchesOrg && matchesIndustry && matchesRegion && matchesIndList && matchesYear;
                 });
             }, [sponsorData, locationData, filters]);
- 
-            // Get unique values for filters
+
+            // Get unique values
             const uniqueRegions = useMemo(() => {
                 const regions = new Set(sponsorData.map(row => {
                     const townKey = (row.Town || '').toLowerCase().trim();
                     const locInfo = locationData[townKey] || {};
                     return locInfo.ee21nm || 'Unknown';
                 }));
-                return Array.from(regions).sort();
+                return Array.from(regions).filter(r => r !== 'Unknown').sort();
             }, [sponsorData, locationData]);
- 
+
             const uniqueIndustries = useMemo(() => {
-                const industries = new Set(sponsorData.map(row => row.Industry));
-                return Array.from(industries).filter(Boolean).sort();
+                return Array.from(new Set(sponsorData.map(row => row.Industry))).filter(Boolean).sort();
             }, [sponsorData]);
- 
+
             // Chart data
             const yearData = useMemo(() => {
                 const grouped = {};
@@ -550,7 +449,7 @@
                     count
                 }));
             }, [processedData]);
- 
+
             const industryCount = useMemo(() => {
                 const grouped = {};
                 processedData.forEach(row => {
@@ -561,26 +460,20 @@
                     .sort((a, b) => b.value - a.value)
                     .slice(0, 10);
             }, [processedData]);
- 
+
             const regionData = useMemo(() => {
                 const grouped = {};
                 processedData.forEach(row => {
-                    if (row.lat && row.lon) {
-                        if (!grouped[row.region]) {
-                            grouped[row.region] = { region: row.region, lat: row.lat, lon: row.lon, count: 0 };
-                        }
-                        grouped[row.region].count += 1;
+                    if (!grouped[row.region]) {
+                        grouped[row.region] = { region: row.region, count: 0 };
                     }
+                    grouped[row.region].count += 1;
                 });
-                return Object.values(grouped);
+                return Object.values(grouped).sort((a, b) => b.count - a.count);
             }, [processedData]);
- 
-            const tableData = useMemo(() => {
-                return processedData.slice(0, 50);
-            }, [processedData]);
- 
- 
- 
+
+            const tableData = processedData.slice(0, 50);
+
             if (loading) {
                 return (
                     <div className="dashboard-container">
@@ -591,24 +484,24 @@
                     </div>
                 );
             }
- 
+
             return (
                 <div className="dashboard-container">
                     <div className="header">
                         <h1>UK Visa Sponsor Register</h1>
                         <p>Interactive Dashboard of Organisations Offering Sponsorship</p>
                     </div>
- 
-                    <div className="main-grid">
-                        {/* Sidebar Filters */}
+
+                    <div className="main-layout">
+                        {/* SIDEBAR */}
                         <div className="sidebar">
-                            {/* KPI Card */}
+                            {/* KPI */}
                             <div className="card kpi-card">
                                 <h3>Total Organisations Found</h3>
                                 <div className="kpi-value">{processedData.length.toLocaleString()}</div>
                             </div>
- 
-                            {/* Registration Date Filter */}
+
+                            {/* Date Filter */}
                             <div className="card filter-section">
                                 <h3>Registration Date</h3>
                                 <div className="date-inputs">
@@ -618,7 +511,6 @@
                                         max="2026"
                                         value={filters.startYear}
                                         onChange={(e) => setFilters({...filters, startYear: parseInt(e.target.value)})}
-                                        placeholder="Start Year"
                                     />
                                     <input
                                         type="number"
@@ -626,11 +518,10 @@
                                         max="2026"
                                         value={filters.endYear}
                                         onChange={(e) => setFilters({...filters, endYear: parseInt(e.target.value)})}
-                                        placeholder="End Year"
                                     />
                                 </div>
                             </div>
- 
+
                             {/* Region Filter */}
                             <div className="card filter-section">
                                 <h3>Region</h3>
@@ -654,8 +545,8 @@
                                     ))}
                                 </div>
                             </div>
- 
-                            {/* Industry Search */}
+
+                            {/* Industry Filter */}
                             <div className="card filter-section">
                                 <h3>Industry</h3>
                                 <input
@@ -665,7 +556,7 @@
                                     value={filters.searchIndustry}
                                     onChange={(e) => setFilters({...filters, searchIndustry: e.target.value})}
                                 />
-                                <div className="checkbox-group" style={{ marginTop: '12px' }}>
+                                <div className="checkbox-group">
                                     {uniqueIndustries
                                         .filter(ind => ind.toLowerCase().includes(filters.searchIndustry.toLowerCase()))
                                         .map(industry => (
@@ -687,131 +578,111 @@
                                         ))}
                                 </div>
                             </div>
- 
+
                             {/* Organisation Search */}
                             <div className="card filter-section">
                                 <h3>Organisation</h3>
                                 <input
                                     type="text"
                                     className="filter-input"
-                                    placeholder="Search organisation..."
+                                    placeholder="Enter Organisation Name"
                                     value={filters.searchOrg}
                                     onChange={(e) => setFilters({...filters, searchOrg: e.target.value})}
                                 />
                             </div>
                         </div>
- 
-                        {/* Main Content */}
+
+                        {/* CONTENT */}
                         <div className="content">
-                            <div className="stats-row">
-                                <div className="stat-item">
-                                    <div className="stat-label">Total Sponsors</div>
-                                    <div className="stat-value">{processedData.length.toLocaleString()}</div>
-                                </div>
-                                <div className="stat-item">
-                                    <div className="stat-label">Regions</div>
-                                    <div className="stat-value">{new Set(processedData.map(d => d.region)).size}</div>
-                                </div>
-                                <div className="stat-item">
-                                    <div className="stat-label">Industries</div>
-                                    <div className="stat-value">{new Set(processedData.map(d => d.Industry)).size}</div>
-                                </div>
-                                <div className="stat-item">
-                                    <div className="stat-label">Years Covered</div>
-                                    <div className="stat-value">{filters.endYear - filters.startYear + 1}</div>
-                                </div>
-                            </div>
- 
-                            <div className="viz-container">
-                                {/* Year Chart */}
-                                <div className="card chart-card">
-                                    <h3>Industries by Year of Registration</h3>
-                                    <div className="chart-wrapper">
-                                        <svg viewBox="0 0 500 300" style={{ width: '100%', height: '100%' }}>
-                                            {yearData.map((d, i) => {
-                                                const maxCount = Math.max(...yearData.map(x => x.count));
-                                                const barHeight = (d.count / maxCount) * 200;
-                                                const x = (i * (450 / yearData.length)) + 35;
-                                                const y = 270 - barHeight;
-                                                return (
-                                                    <g key={i}>
-                                                        <rect
-                                                            x={x}
-                                                            y={y}
-                                                            width={Math.max(1, (450 / yearData.length) - 2)}
-                                                            height={barHeight}
-                                                            fill="url(#gradient)"
-                                                            opacity="0.9"
-                                                        />
-                                                        <text x={x + (450 / yearData.length) / 2} y={290} textAnchor="middle" fill="var(--text-secondary)" fontSize="10">{d.year}</text>
-                                                        <text x={x + (450 / yearData.length) / 2} y={y - 5} textAnchor="middle" fill="var(--accent-primary)" fontSize="9" fontWeight="bold">{d.count.toLocaleString()}</text>
-                                                    </g>
-                                                );
-                                            })}
-                                            <defs>
-                                                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                    <stop offset="0%" style={{stopColor: 'var(--accent-primary)', stopOpacity: 1}} />
-                                                    <stop offset="100%" style={{stopColor: 'var(--accent-secondary)', stopOpacity: 1}} />
-                                                </linearGradient>
-                                            </defs>
-                                            <line x1="35" y1="270" x2="490" y2="270" stroke="var(--border-color)" />
-                                            <line x1="35" y1="270" x2="35" y2="20" stroke="var(--border-color)" />
-                                        </svg>
-                                    </div>
-                                </div>
- 
-                                {/* Industry Chart */}
-                                <div className="card chart-card">
-                                    <h3>Top Industries</h3>
-                                    <div className="chart-wrapper">
-                                        <svg viewBox="0 0 500 300" style={{ width: '100%', height: '100%' }}>
-                                            {industryCount.map((d, i) => {
-                                                const maxValue = Math.max(...industryCount.map(x => x.value));
-                                                const barWidth = (d.value / maxValue) * 350;
-                                                const y = (i * (270 / industryCount.length)) + 15;
-                                                return (
-                                                    <g key={i}>
-                                                        <rect x="135" y={y} width={barWidth} height={20} fill="url(#gradientH)" opacity="0.9" />
-                                                        <text x="130" y={y + 15} textAnchor="end" fill="var(--text-secondary)" fontSize="9">{d.name.substring(0, 15)}</text>
-                                                        <text x={135 + barWidth + 5} y={y + 15} fill="var(--accent-primary)" fontSize="9" fontWeight="bold">{d.value.toLocaleString()}</text>
-                                                    </g>
-                                                );
-                                            })}
-                                            <defs>
-                                                <linearGradient id="gradientH" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                    <stop offset="0%" style={{stopColor: 'var(--accent-secondary)', stopOpacity: 1}} />
-                                                    <stop offset="100%" style={{stopColor: 'var(--accent-tertiary)', stopOpacity: 1}} />
-                                                </linearGradient>
-                                            </defs>
-                                        </svg>
-                                    </div>
+                            {/* Map / Regions by Year */}
+                            <div className="card chart-card">
+                                <h3>Industries by Year of Registration</h3>
+                                <div className="chart-wrapper">
+                                    <svg viewBox="0 0 450 300" style={{ width: '100%', height: '100%' }}>
+                                        {yearData.map((d, i) => {
+                                            const maxCount = Math.max(...yearData.map(x => x.count), 1);
+                                            const barHeight = (d.count / maxCount) * 220;
+                                            const x = (i * (410 / yearData.length)) + 30;
+                                            const y = 260 - barHeight;
+                                            return (
+                                                <g key={i} className="clickable-bar" onClick={() => {
+                                                    if (filters.years.includes(d.year)) {
+                                                        setFilters({...filters, years: filters.years.filter(y => y !== d.year)});
+                                                    } else {
+                                                        setFilters({...filters, years: [...filters.years, d.year]});
+                                                    }
+                                                }}>
+                                                    <rect x={x} y={y} width={Math.max(1, (410 / yearData.length) - 2)} height={barHeight} fill="#333333" />
+                                                    <text x={x + (410 / yearData.length) / 2} y={280} textAnchor="middle" fill="#888888" fontSize="11">{d.year}</text>
+                                                    <text x={x + (410 / yearData.length) / 2} y={y - 5} textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="bold">{d.count}</text>
+                                                </g>
+                                            );
+                                        })}
+                                    </svg>
                                 </div>
                             </div>
- 
-                            {/* Regions Grid */}
+
+                            {/* Top Industries */}
+                            <div className="card chart-card">
+                                <h3>Top Industries</h3>
+                                <div className="chart-wrapper">
+                                    <svg viewBox="0 0 450 300" style={{ width: '100%', height: '100%' }}>
+                                        {industryCount.map((d, i) => {
+                                            const maxValue = Math.max(...industryCount.map(x => x.value), 1);
+                                            const barWidth = (d.value / maxValue) * 320;
+                                            const y = (i * (270 / industryCount.length)) + 15;
+                                            return (
+                                                <g key={i} className="clickable-bar" onClick={() => {
+                                                    if (filters.industries.includes(d.name)) {
+                                                        setFilters({...filters, industries: filters.industries.filter(ind => ind !== d.name)});
+                                                    } else {
+                                                        setFilters({...filters, industries: [...filters.industries, d.name]});
+                                                    }
+                                                }}>
+                                                    <rect x="100" y={y} width={barWidth} height="18" fill="#333333" />
+                                                    <text x="95" y={y + 13} textAnchor="end" fill="#888888" fontSize="9">{d.name.substring(0, 12)}</text>
+                                                    <text x={100 + barWidth + 5} y={y + 13} fill="#ffffff" fontSize="9" fontWeight="bold">{d.value.toLocaleString()}</text>
+                                                </g>
+                                            );
+                                        })}
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Industries by Region */}
                             <div className="card chart-card full-width">
-                                <h3>Industries by Region ({regionData.length} regions found)</h3>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginTop: '15px' }}>
+                                <h3>Industries by Region</h3>
+                                <div className="region-grid">
                                     {regionData.map((region, idx) => {
-                                        const maxCount = Math.max(...regionData.map(r => r.count));
+                                        const isSelected = filters.regions.includes(region.region);
+                                        const maxCount = Math.max(...regionData.map(r => r.count), 1);
                                         const percentage = (region.count / maxCount) * 100;
                                         return (
-                                            <div key={idx} style={{ padding: '15px', background: 'rgba(0, 212, 255, 0.05)', border: '1px solid var(--border-color)', borderRadius: '8px' }}>
-                                                <div style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '8px' }}>{region.region}</div>
-                                                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--accent-primary)', marginBottom: '8px' }}>{region.count}</div>
-                                                <div style={{ height: '4px', background: 'var(--border-color)', borderRadius: '2px', overflow: 'hidden' }}>
-                                                    <div style={{ height: '100%', background: `linear-gradient(90deg, #00d4ff, #6366f1)`, width: `${percentage}%` }}></div>
+                                            <div 
+                                                key={idx} 
+                                                className={`region-card ${isSelected ? 'selected' : ''}`}
+                                                onClick={() => {
+                                                    if (filters.regions.includes(region.region)) {
+                                                        setFilters({...filters, regions: filters.regions.filter(r => r !== region.region)});
+                                                    } else {
+                                                        setFilters({...filters, regions: [...filters.regions, region.region]});
+                                                    }
+                                                }}
+                                            >
+                                                <div className="region-name">{region.region}</div>
+                                                <div className="region-count">{region.count}</div>
+                                                <div style={{ height: '3px', background: '#444444', marginTop: '8px', borderRadius: '2px' }}>
+                                                    <div style={{ height: '100%', background: '#ffffff', width: `${percentage}%`, borderRadius: '2px' }}></div>
                                                 </div>
-                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px' }}>Sponsors in region</div>
                                             </div>
                                         );
                                     })}
                                 </div>
                             </div>
- 
+
                             {/* Data Table */}
                             <div className="card chart-card full-width">
-                                <h3>Organisation Details (Showing {tableData.length} of {processedData.length})</h3>
+                                <h3>Organisation Name (Showing {tableData.length} of {processedData.length})</h3>
                                 <div className="table-wrapper">
                                     <table className="data-table">
                                         <thead>
@@ -842,9 +713,8 @@
                 </div>
             );
         }
- 
+
         ReactDOM.createRoot(document.getElementById('root')).render(<Dashboard />);
     </script>
 </body>
 </html>
- 
