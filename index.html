@@ -229,46 +229,52 @@
             opacity: 0.7;
         }
 
-        .regions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-            gap: 8px;
+        .region-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             overflow-y: auto;
             flex: 1;
-            margin-top: 10px;
+            width: 100%;
         }
 
-        .region-box {
-            background: #0a0a0a;
-            border: 1px solid #333;
+        .region-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .region-bar-label {
+            min-width: 100px;
+            font-size: 0.75rem;
+            color: #ccc;
+            text-align: right;
+        }
+
+        .region-bar-fill {
+            flex: 1;
+            background: #4a90e2;
+            height: 24px;
             border-radius: 3px;
-            padding: 8px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 0.7rem;
         }
 
-        .region-box:hover {
-            border-color: #4a90e2;
-            background: rgba(74, 144, 226, 0.1);
+        .region-bar-fill:hover {
+            background: #3a7bc8;
+            opacity: 0.9;
         }
 
-        .region-box.selected {
-            border-color: #4a90e2;
-            background: rgba(74, 144, 226, 0.2);
-        }
-
-        .region-name {
-            color: #ccc;
-            font-size: 0.7rem;
-            margin-bottom: 4px;
-        }
-
-        .region-count {
-            font-size: clamp(0.9rem, 2vw, 1.3rem);
-            font-weight: 700;
-            color: #fff;
+        .region-bar-fill.selected {
+            background: #2a6bb8;
+            border: 1px solid #4a90e2;
         }
 
         .pie-chart {
@@ -358,39 +364,6 @@
             text-align: right;
         }
 
-        .heatmap-row {
-            display: flex;
-            gap: 2px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-
-        .heatmap-label {
-            width: 80px;
-            font-size: 0.65rem;
-            color: #999;
-            text-align: right;
-            padding-right: 8px;
-        }
-
-        .heatmap-cell {
-            flex: 1;
-            height: 24px;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .heatmap-cell:hover {
-            transform: scale(1.05);
-        }
-
         .table-container {
             background: #1a1a1a;
             border: 1px solid #333;
@@ -419,6 +392,14 @@
             flex: 1;
         }
 
+        .table-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
         .table-search {
             display: flex;
             gap: 8px;
@@ -434,6 +415,50 @@
             border-radius: 3px;
             color: #000;
             font-size: 0.8rem;
+        }
+
+        .items-per-page {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+        }
+
+        .items-per-page select {
+            padding: 5px;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .sort-btn {
+            padding: 5px 8px;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .sort-btn:hover {
+            background: #444;
+        }
+
+        .sort-btn.active {
+            background: #4a90e2;
+            border-color: #2a7bc8;
         }
 
         .table-nav {
@@ -500,6 +525,12 @@
             font-weight: 700;
             text-transform: uppercase;
             font-size: clamp(0.65rem, 1vw, 0.8rem);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .data-table th:hover {
+            background: #2a2a2a;
         }
 
         .data-table td {
@@ -603,11 +634,12 @@
                 gap: 10px;
             }
 
-            .regions-grid {
-                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .table-header {
+            .table-controls {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -626,9 +658,8 @@
                 gap: 8px;
             }
 
-            .heatmap-label {
-                width: 60px;
-                font-size: 0.6rem;
+            .region-bar-label {
+                min-width: 60px;
             }
         }
     </style>
@@ -644,7 +675,9 @@
             const [locationData, setLocationData] = useState({});
             const [loading, setLoading] = useState(true);
             const [currentPage, setCurrentPage] = useState(1);
-            const itemsPerPage = 50;
+            const [itemsPerPage, setItemsPerPage] = useState(50);
+            const [sortBy, setSortBy] = useState('name');
+            const [sortOrder, setSortOrder] = useState('asc');
 
             const [filters, setFilters] = useState({
                 searchOrg: '',
@@ -726,13 +759,34 @@
                 });
             }, [sponsorData, locationData, filters]);
 
+            // Sort data
+            const sortedData = useMemo(() => {
+                const sorted = [...processedData];
+                sorted.sort((a, b) => {
+                    let aVal, bVal;
+                    switch(sortBy) {
+                        case 'name': aVal = a['Organisation Name'] || ''; bVal = b['Organisation Name'] || ''; break;
+                        case 'year': aVal = a.year || 0; bVal = b.year || 0; break;
+                        case 'town': aVal = a.town || ''; bVal = b.town || ''; break;
+                        case 'industry': aVal = a.Industry || ''; bVal = b.Industry || ''; break;
+                        default: aVal = a['Organisation Name']; bVal = b['Organisation Name'];
+                    }
+                    if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+                    if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+                    if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+                    return 0;
+                });
+                return sorted;
+            }, [processedData, sortBy, sortOrder]);
+
             useEffect(() => {
                 setCurrentPage(1);
-            }, [processedData]);
+            }, [sortedData, itemsPerPage]);
 
-            const totalPages = Math.ceil(processedData.length / itemsPerPage);
+            const totalPages = Math.ceil(sortedData.length / itemsPerPage);
             const startIdx = (currentPage - 1) * itemsPerPage;
-            const tableData = processedData.slice(startIdx, startIdx + itemsPerPage);
+            const tableData = sortedData.slice(startIdx, startIdx + itemsPerPage);
 
             const uniqueRegions = useMemo(() => {
                 const regions = new Set(sponsorData.map(row => {
@@ -769,11 +823,10 @@
                 return Object.values(grouped).sort((a, b) => b.count - a.count);
             }, [processedData]);
 
-            // Tier Distribution
+            // Tier Distribution (Main Tier only - no Sub Tier)
             const tierData = useMemo(() => {
                 const mainTier = processedData.filter(r => r['Main Tier'] && r['Main Tier'].trim()).length;
-                const subTier = processedData.length - mainTier;
-                return { mainTier, subTier, total: processedData.length };
+                return { mainTier, other: processedData.length - mainTier, total: processedData.length };
             }, [processedData]);
 
             // Top Growth Industries (2025-2026)
@@ -799,22 +852,6 @@
                     town,
                     count
                 }));
-            }, [processedData]);
-
-            // Tier by Region Heatmap
-            const tierByRegion = useMemo(() => {
-                const data = {};
-                processedData.forEach(row => {
-                    if (!data[row.region]) {
-                        data[row.region] = { main: 0, sub: 0 };
-                    }
-                    if (row['Main Tier'] && row['Main Tier'].trim()) {
-                        data[row.region].main += 1;
-                    } else {
-                        data[row.region].sub += 1;
-                    }
-                });
-                return Object.entries(data).sort((a, b) => (b[1].main + b[1].sub) - (a[1].main + a[1].sub)).slice(0, 10);
             }, [processedData]);
 
             const resetFilters = () => {
@@ -928,23 +965,27 @@
 
                             <div className="chart-container">
                                 <h2>Sponsors by Region</h2>
-                                <div className="regions-grid">
+                                <div className="region-bars">
                                     {regionData.map(region => {
+                                        const maxCount = regionData[0]?.count || 1;
+                                        const width = (region.count / maxCount) * 100;
                                         const isSelected = filters.regions.includes(region.region);
                                         return (
-                                            <div
-                                                key={region.region}
-                                                className={`region-box ${isSelected ? 'selected' : ''}`}
-                                                onClick={() => {
-                                                    if (filters.regions.includes(region.region)) {
-                                                        setFilters({...filters, regions: filters.regions.filter(r => r !== region.region)});
-                                                    } else {
-                                                        setFilters({...filters, regions: [...filters.regions, region.region]});
-                                                    }
-                                                }}
-                                            >
-                                                <div className="region-name">{region.region}</div>
-                                                <div className="region-count">{region.count}</div>
+                                            <div key={region.region} className="region-bar">
+                                                <div className="region-bar-label">{region.region}</div>
+                                                <div 
+                                                    className={`region-bar-fill ${isSelected ? 'selected' : ''}`}
+                                                    style={{width: `${width}%`}}
+                                                    onClick={() => {
+                                                        if (filters.regions.includes(region.region)) {
+                                                            setFilters({...filters, regions: filters.regions.filter(r => r !== region.region)});
+                                                        } else {
+                                                            setFilters({...filters, regions: [...filters.regions, region.region]});
+                                                        }
+                                                    }}
+                                                >
+                                                    {region.count}
+                                                </div>
                                             </div>
                                         );
                                     })}
@@ -952,7 +993,7 @@
                             </div>
 
                             <div className="chart-container">
-                                <h2>Tier Distribution</h2>
+                                <h2>Main Tier Distribution</h2>
                                 <div className="pie-chart">
                                     <svg viewBox="0 0 200 150" style={{width: '100%', maxWidth: '150px'}}>
                                         <circle cx="75" cy="75" r="50" fill="#4a90e2" />
@@ -968,7 +1009,7 @@
                                         </div>
                                         <div className="legend-item">
                                             <div className="legend-color" style={{background: '#666'}}></div>
-                                            <span>Sub Tier: {tierData.subTier}</span>
+                                            <span>Others: {tierData.other}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1003,53 +1044,45 @@
                                 </div>
                             </div>
 
-                            <div className="chart-container">
-                                <h2>Tier Distribution by Region</h2>
-                                <div className="chart-wrapper" style={{flexDirection: 'column', padding: '8px', justifyContent: 'flex-start', alignItems: 'stretch'}}>
-                                    {tierByRegion.map(([region, data], i) => (
-                                        <div key={i} className="heatmap-row">
-                                            <div className="heatmap-label">{region}</div>
-                                            <div className="heatmap-cell" style={{background: '#4a90e2', flex: data.main, minWidth: '20px'}}>
-                                                {data.main > 5 ? data.main : ''}
-                                            </div>
-                                            <div className="heatmap-cell" style={{background: '#666', flex: data.sub, minWidth: '20px'}}>
-                                                {data.sub > 5 ? data.sub : ''}
-                                            </div>
-                                        </div>
-                                    ))}
-                                    <div style={{fontSize: '0.65rem', color: '#999', marginTop: '8px'}}>
-                                        <span style={{color: '#4a90e2'}}>■</span> Main Tier | <span style={{color: '#666'}}>■</span> Sub Tier
-                                    </div>
-                                </div>
-                            </div>
-
                             <div className="table-container">
                                 <div className="table-header">
-                                    <h2>Organisations (Showing {startIdx + 1}-{Math.min(startIdx + itemsPerPage, processedData.length)} of {processedData.length.toLocaleString()})</h2>
-                                    <div className="table-search">
-                                        <input
-                                            type="text"
-                                            placeholder="Search organisation..."
-                                            value={filters.searchOrg}
-                                            onChange={(e) => setFilters({...filters, searchOrg: e.target.value})}
-                                        />
-                                    </div>
-                                    <div className="table-nav">
-                                        <button className="nav-btn" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>⏮</button>
-                                        <button className="nav-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
-                                        <span className="page-info">{currentPage} / {totalPages}</span>
-                                        <button className="nav-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
-                                        <button className="nav-btn" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>⏭</button>
+                                    <h2>Organisations (Showing {startIdx + 1}-{Math.min(startIdx + itemsPerPage, sortedData.length)} of {sortedData.length.toLocaleString()})</h2>
+                                    <div className="table-controls">
+                                        <div className="table-search">
+                                            <input
+                                                type="text"
+                                                placeholder="Search organisation..."
+                                                value={filters.searchOrg}
+                                                onChange={(e) => setFilters({...filters, searchOrg: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="items-per-page">
+                                            <label>Per Page:</label>
+                                            <select value={itemsPerPage} onChange={(e) => setItemsPerPage(parseInt(e.target.value))}>
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="250">250</option>
+                                            </select>
+                                        </div>
+                                        <div className="table-nav">
+                                            <button className="nav-btn" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>⏮</button>
+                                            <button className="nav-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
+                                            <span className="page-info">{currentPage} / {totalPages}</span>
+                                            <button className="nav-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
+                                            <button className="nav-btn" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>⏭</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="table-wrapper">
                                     <table className="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Organisation</th>
-                                                <th>Year</th>
-                                                <th>Town</th>
-                                                <th>Industry</th>
+                                                <th onClick={() => {setSortBy('name'); setSortOrder(sortBy === 'name' && sortOrder === 'asc' ? 'desc' : 'asc');}}>Organisation {sortBy === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
+                                                <th onClick={() => {setSortBy('year'); setSortOrder(sortBy === 'year' && sortOrder === 'asc' ? 'desc' : 'asc');}}>Year {sortBy === 'year' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
+                                                <th onClick={() => {setSortBy('town'); setSortOrder(sortBy === 'town' && sortOrder === 'asc' ? 'desc' : 'asc');}}>Town {sortBy === 'town' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
+                                                <th onClick={() => {setSortBy('industry'); setSortOrder(sortBy === 'industry' && sortOrder === 'asc' ? 'desc' : 'asc');}}>Industry {sortBy === 'industry' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1069,7 +1102,7 @@
                     </div>
 
                     <div className="footer">
-                        Created by <strong>Anjaney</strong> with <strong>Claude</strong> | Data sources: <a href="https://uktiersponsors.co.uk/" target="_blank">UK Tier Sponsors</a>, <a href="https://geoportal.statistics.gov.uk/" target="_blank">ONS Geoportal</a>
+                        Designed & Developed by <strong>Anjaney Singh</strong> using <strong>Claude AI</strong> | Data sources: <a href="https://uktiersponsors.co.uk/" target="_blank">UK Tier Sponsors</a>, <a href="https://geoportal.statistics.gov.uk/" target="_blank">ONS Geoportal</a>
                     </div>
                 </div>
             );
