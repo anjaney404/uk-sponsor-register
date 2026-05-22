@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UK Visa Sponsor Register</title>
+    <title>UK Tier 2 Visa Sponsors</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -35,16 +35,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .top-bar h1 {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
             font-weight: 700;
-        }
-
-        .top-bar-search {
-            display: flex;
-            gap: 10px;
         }
 
         .top-bar-search button {
@@ -55,6 +51,7 @@
             cursor: pointer;
             border-radius: 3px;
             font-weight: 600;
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
         }
 
         .top-bar-search button:hover {
@@ -66,15 +63,17 @@
             flex: 1;
             gap: 15px;
             padding: 15px;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .sidebar {
-            width: 280px;
+            width: clamp(220px, 20vw, 350px);
             display: flex;
             flex-direction: column;
             gap: 12px;
-            height: 100%;
             overflow-y: auto;
+            flex-shrink: 0;
         }
 
         .filter-card {
@@ -85,33 +84,9 @@
             flex-shrink: 0;
         }
 
-        .filter-card.industry-card {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 400px;
-            max-height: none;
-            overflow: hidden;
-        }
-
-        .filter-card.region-card {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 400px;
-            max-height: none;
-            overflow: hidden;
-        }
-
-        .filter-card.industry-card .checkbox-group,
-        .filter-card.region-card .checkbox-group {
-            flex: 1;
-            max-height: none;
-        }
-
         .filter-card h3 {
             color: #fff;
-            font-size: 0.8rem;
+            font-size: clamp(0.7rem, 1.5vw, 0.85rem);
             text-transform: uppercase;
             font-weight: 700;
             margin-bottom: 10px;
@@ -120,7 +95,7 @@
         }
 
         .kpi-value {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
             font-weight: 700;
             text-align: center;
             color: #fff;
@@ -146,7 +121,6 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            max-height: 200px;
             overflow-y: auto;
             font-size: 0.8rem;
         }
@@ -156,6 +130,7 @@
             align-items: center;
             gap: 6px;
             padding: 3px;
+            cursor: pointer;
         }
 
         .checkbox-item input {
@@ -182,32 +157,34 @@
             border-radius: 3px;
         }
 
-        .reset-btn {
-            width: 100%;
-            padding: 8px;
-            background: #444;
-            border: 1px solid #555;
-            color: #fff;
-            cursor: pointer;
-            border-radius: 3px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            margin-top: 8px;
+        .filter-card.industry-card,
+        .filter-card.region-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 250px;
+            max-height: none;
+            overflow: hidden;
         }
 
-        .reset-btn:hover {
-            background: #555;
+        .filter-card.industry-card .checkbox-group,
+        .filter-card.region-card .checkbox-group {
+            flex: 1;
+            max-height: none;
         }
 
         .content {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .content > .table-container {
             grid-column: 1 / -1;
+            min-height: 0;
         }
 
         .chart-container {
@@ -217,31 +194,35 @@
             padding: 12px;
             display: flex;
             flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .chart-container h2 {
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             color: #fff;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
         .chart-wrapper {
             flex: 1;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             background: #0a0a0a;
             border: 1px solid #333;
             border-radius: 3px;
             padding: 10px;
-            min-height: 300px;
+            min-height: 0;
+            overflow: hidden;
         }
 
         svg {
+            cursor: pointer;
             width: 100%;
             height: 100%;
-            cursor: pointer;
         }
 
         .clickable-bar:hover {
@@ -250,8 +231,10 @@
 
         .regions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
             gap: 8px;
+            overflow-y: auto;
+            flex: 1;
             margin-top: 10px;
         }
 
@@ -283,9 +266,129 @@
         }
 
         .region-count {
-            font-size: 1.2rem;
+            font-size: clamp(0.9rem, 2vw, 1.3rem);
             font-weight: 700;
             color: #fff;
+        }
+
+        .pie-chart {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .pie-legend {
+            display: flex;
+            gap: 20px;
+            font-size: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .growth-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-bottom: 1px solid #333;
+            font-size: 0.75rem;
+        }
+
+        .growth-label {
+            flex: 1;
+            color: #ccc;
+            min-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .growth-bar-fill {
+            background: #4a90e2;
+            height: 20px;
+            border-radius: 2px;
+            min-width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .town-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
+            border-bottom: 1px solid #333;
+            font-size: 0.75rem;
+        }
+
+        .town-rank {
+            color: #999;
+            min-width: 25px;
+            font-weight: 700;
+        }
+
+        .town-name {
+            flex: 1;
+            color: #ccc;
+        }
+
+        .town-count {
+            color: #4a90e2;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .heatmap-row {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .heatmap-label {
+            width: 80px;
+            font-size: 0.65rem;
+            color: #999;
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        .heatmap-cell {
+            flex: 1;
+            height: 24px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.05);
         }
 
         .table-container {
@@ -295,8 +398,8 @@
             padding: 12px;
             display: flex;
             flex-direction: column;
-            grid-column: 2;
-            grid-row: 2;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .table-header {
@@ -306,19 +409,21 @@
             gap: 15px;
             margin-bottom: 10px;
             flex-wrap: wrap;
+            flex-shrink: 0;
         }
 
         .table-header h2 {
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 1.5vw, 0.95rem);
             font-weight: 700;
             color: #fff;
+            flex: 1;
         }
 
         .table-search {
             display: flex;
             gap: 8px;
             flex: 1;
-            min-width: 250px;
+            min-width: 200px;
         }
 
         .table-search input {
@@ -335,6 +440,7 @@
             display: flex;
             gap: 6px;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .nav-btn {
@@ -344,8 +450,9 @@
             color: #fff;
             cursor: pointer;
             border-radius: 3px;
-            font-size: 0.75rem;
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .nav-btn:hover:not(:disabled) {
@@ -359,7 +466,7 @@
 
         .page-info {
             color: #999;
-            font-size: 0.75rem;
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
             padding: 0 5px;
             white-space: nowrap;
         }
@@ -370,14 +477,13 @@
             border: 1px solid #333;
             border-radius: 3px;
             background: #0a0a0a;
-            max-height: 550px;
-            min-height: 450px;
+            min-height: 0;
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.75rem;
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
         }
 
         .data-table thead {
@@ -393,7 +499,7 @@
             color: #00d4ff;
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.7rem;
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
         }
 
         .data-table td {
@@ -437,8 +543,8 @@
             padding: 15px 20px;
             text-align: center;
             color: #999;
-            font-size: 0.8rem;
-            margin-top: auto;
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+            flex-shrink: 0;
         }
 
         .footer a {
@@ -450,48 +556,10 @@
             text-decoration: underline;
         }
 
-        .industries-chart {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 10px;
-        }
-
-        .industry-bar-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .industry-name {
-            color: #ccc;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .industry-bar-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .industry-bar {
-            background: #4a90e2;
-            height: 20px;
-            border-radius: 2px;
-            min-width: 10px;
-        }
-
-        .industry-count {
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 700;
-            min-width: 40px;
-            text-align: right;
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
+        @media (max-width: 1400px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 1200px) {
@@ -501,17 +569,66 @@
 
             .sidebar {
                 width: 100%;
+                max-height: 35vh;
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .filter-card.industry-card,
+            .filter-card.region-card {
+                min-height: auto;
+                max-height: 250px;
+            }
+
+            .content {
+                grid-template-columns: repeat(2, 1fr);
+                max-height: 55vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .main-content {
+                padding: 10px;
+                gap: 10px;
             }
 
             .content {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
 
-            .table-container {
-                grid-column: 1;
-                grid-row: auto;
+            .regions-grid {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .table-search {
+                min-width: auto;
+            }
+
+            .table-nav {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .pie-legend {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .heatmap-label {
+                width: 60px;
+                font-size: 0.6rem;
             }
         }
     </style>
@@ -652,6 +769,54 @@
                 return Object.values(grouped).sort((a, b) => b.count - a.count);
             }, [processedData]);
 
+            // Tier Distribution
+            const tierData = useMemo(() => {
+                const mainTier = processedData.filter(r => r['Main Tier'] && r['Main Tier'].trim()).length;
+                const subTier = processedData.length - mainTier;
+                return { mainTier, subTier, total: processedData.length };
+            }, [processedData]);
+
+            // Top Growth Industries (2025-2026)
+            const growthIndustries = useMemo(() => {
+                const recent = processedData.filter(r => r.year >= 2025);
+                const grouped = {};
+                recent.forEach(row => {
+                    grouped[row.Industry] = (grouped[row.Industry] || 0) + 1;
+                });
+                return Object.entries(grouped).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([ind, count]) => ({
+                    industry: ind,
+                    count
+                }));
+            }, [processedData]);
+
+            // Top Towns
+            const topTowns = useMemo(() => {
+                const grouped = {};
+                processedData.forEach(row => {
+                    grouped[row.town] = (grouped[row.town] || 0) + 1;
+                });
+                return Object.entries(grouped).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([town, count]) => ({
+                    town,
+                    count
+                }));
+            }, [processedData]);
+
+            // Tier by Region Heatmap
+            const tierByRegion = useMemo(() => {
+                const data = {};
+                processedData.forEach(row => {
+                    if (!data[row.region]) {
+                        data[row.region] = { main: 0, sub: 0 };
+                    }
+                    if (row['Main Tier'] && row['Main Tier'].trim()) {
+                        data[row.region].main += 1;
+                    } else {
+                        data[row.region].sub += 1;
+                    }
+                });
+                return Object.entries(data).sort((a, b) => (b[1].main + b[1].sub) - (a[1].main + a[1].sub)).slice(0, 10);
+            }, [processedData]);
+
             const resetFilters = () => {
                 setFilters({
                     searchOrg: '',
@@ -735,9 +900,9 @@
 
                         <div className="content">
                             <div className="chart-container">
-                                <h2>Industries by Year of Registration</h2>
+                                <h2>Registrations by Year</h2>
                                 <div className="chart-wrapper">
-                                    <svg viewBox="0 0 500 300">
+                                    <svg viewBox="0 0 500 300" preserveAspectRatio="xMidYMid meet">
                                         {yearData.map((d, i) => {
                                             const maxCount = Math.max(...yearData.map(x => x.count), 1);
                                             const barHeight = (d.count / maxCount) * 220;
@@ -762,7 +927,7 @@
                             </div>
 
                             <div className="chart-container">
-                                <h2>Industries by Region</h2>
+                                <h2>Sponsors by Region</h2>
                                 <div className="regions-grid">
                                     {regionData.map(region => {
                                         const isSelected = filters.regions.includes(region.region);
@@ -786,30 +951,102 @@
                                 </div>
                             </div>
 
-                            <div className="table-container full-width">
+                            <div className="chart-container">
+                                <h2>Tier Distribution</h2>
+                                <div className="pie-chart">
+                                    <svg viewBox="0 0 200 150" style={{width: '100%', maxWidth: '150px'}}>
+                                        <circle cx="75" cy="75" r="50" fill="#4a90e2" />
+                                        <circle cx="75" cy="75" r="40" fill="#0a0a0a" />
+                                        <text x="75" y="75" textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize="20" fontWeight="bold">
+                                            {Math.round((tierData.mainTier / tierData.total) * 100)}%
+                                        </text>
+                                    </svg>
+                                    <div className="pie-legend">
+                                        <div className="legend-item">
+                                            <div className="legend-color" style={{background: '#4a90e2'}}></div>
+                                            <span>Main Tier: {tierData.mainTier}</span>
+                                        </div>
+                                        <div className="legend-item">
+                                            <div className="legend-color" style={{background: '#666'}}></div>
+                                            <span>Sub Tier: {tierData.subTier}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="chart-container">
+                                <h2>Top Growth Industries (2025-2026)</h2>
+                                <div className="chart-wrapper" style={{flexDirection: 'column', padding: '5px', justifyContent: 'flex-start'}}>
+                                    {growthIndustries.map((ind, i) => {
+                                        const maxCount = growthIndustries[0]?.count || 1;
+                                        const width = (ind.count / maxCount) * 100;
+                                        return (
+                                            <div key={i} className="growth-bar">
+                                                <div className="growth-label" title={ind.industry}>{ind.industry}</div>
+                                                <div className="growth-bar-fill" style={{width: `${width}%`, minWidth: '30px'}}>{ind.count}</div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="chart-container">
+                                <h2>Top Towns by Sponsors</h2>
+                                <div className="chart-wrapper" style={{flexDirection: 'column', padding: '5px', justifyContent: 'flex-start'}}>
+                                    {topTowns.map((town, i) => (
+                                        <div key={i} className="town-item">
+                                            <div className="town-rank">#{i + 1}</div>
+                                            <div className="town-name">{town.town}</div>
+                                            <div className="town-count">{town.count}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="chart-container">
+                                <h2>Tier Distribution by Region</h2>
+                                <div className="chart-wrapper" style={{flexDirection: 'column', padding: '8px', justifyContent: 'flex-start', alignItems: 'stretch'}}>
+                                    {tierByRegion.map(([region, data], i) => (
+                                        <div key={i} className="heatmap-row">
+                                            <div className="heatmap-label">{region}</div>
+                                            <div className="heatmap-cell" style={{background: '#4a90e2', flex: data.main, minWidth: '20px'}}>
+                                                {data.main > 5 ? data.main : ''}
+                                            </div>
+                                            <div className="heatmap-cell" style={{background: '#666', flex: data.sub, minWidth: '20px'}}>
+                                                {data.sub > 5 ? data.sub : ''}
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <div style={{fontSize: '0.65rem', color: '#999', marginTop: '8px'}}>
+                                        <span style={{color: '#4a90e2'}}>■</span> Main Tier | <span style={{color: '#666'}}>■</span> Sub Tier
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="table-container">
                                 <div className="table-header">
-                                    <h2>Organisation Name (Showing {startIdx + 1}-{Math.min(startIdx + itemsPerPage, processedData.length)} of {processedData.length.toLocaleString()})</h2>
+                                    <h2>Organisations (Showing {startIdx + 1}-{Math.min(startIdx + itemsPerPage, processedData.length)} of {processedData.length.toLocaleString()})</h2>
                                     <div className="table-search">
                                         <input
                                             type="text"
-                                            placeholder="Search organisation name..."
+                                            placeholder="Search organisation..."
                                             value={filters.searchOrg}
                                             onChange={(e) => setFilters({...filters, searchOrg: e.target.value})}
                                         />
                                     </div>
                                     <div className="table-nav">
-                                        <button className="nav-btn" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>⏮ First</button>
-                                        <button className="nav-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀ Prev</button>
-                                        <span className="page-info">Page {currentPage} / {totalPages}</span>
-                                        <button className="nav-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>Next ▶</button>
-                                        <button className="nav-btn" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>Last ⏭</button>
+                                        <button className="nav-btn" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>⏮</button>
+                                        <button className="nav-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
+                                        <span className="page-info">{currentPage} / {totalPages}</span>
+                                        <button className="nav-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
+                                        <button className="nav-btn" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>⏭</button>
                                     </div>
                                 </div>
                                 <div className="table-wrapper">
                                     <table className="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Organisation Name</th>
+                                                <th>Organisation</th>
                                                 <th>Year</th>
                                                 <th>Town</th>
                                                 <th>Industry</th>
