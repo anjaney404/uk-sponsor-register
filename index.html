@@ -827,7 +827,12 @@
             const growthIndustries = useMemo(() => {
                 if (processedData.length === 0) return [];
                 // Get the most recent year in filtered data
-                const maxYear = Math.max(...processedData.map(r => r.year));
+                let maxYear = 2013;
+                for (let i = 0; i < processedData.length; i++) {
+                    if (processedData[i].year > maxYear) {
+                        maxYear = processedData[i].year;
+                    }
+                }
                 // Show industries from last 2 years of filtered data
                 const recentYears = processedData.filter(r => r.year >= maxYear - 1);
                 const grouped = {};
@@ -991,7 +996,7 @@
                             </div>
 
                             <div className="chart-container">
-                                <h2>Top Growth Industries ({processedData.length > 0 ? `${Math.max(...processedData.map(r => r.year), 2013) - 1}-${Math.max(...processedData.map(r => r.year), 2013)}` : '2013'})</h2>
+                                <h2>Top Growth Industries ({processedData.length > 0 ? (() => { let maxYear = 2013; for (let i = 0; i < processedData.length; i++) { if (processedData[i].year > maxYear) maxYear = processedData[i].year; } return `${maxYear - 1}-${maxYear}`; })() : '2013'})</h2>
                                 <div className="chart-wrapper" style={{flexDirection: 'column', padding: '5px', justifyContent: 'flex-start'}}>
                                     {growthIndustries.map((ind, i) => {
                                         const maxCount = growthIndustries[0]?.count || 1;
