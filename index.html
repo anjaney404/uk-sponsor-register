@@ -73,7 +73,8 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-height: calc(100vh - 120px);
+            height: 100%;
+            overflow-y: auto;
         }
 
         .filter-card {
@@ -88,10 +89,22 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 300px;
+            min-height: 400px;
+            max-height: none;
+            overflow: hidden;
         }
 
-        .filter-card.industry-card .checkbox-group {
+        .filter-card.region-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+            max-height: none;
+            overflow: hidden;
+        }
+
+        .filter-card.industry-card .checkbox-group,
+        .filter-card.region-card .checkbox-group {
             flex: 1;
             max-height: none;
         }
@@ -191,6 +204,10 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
+        }
+
+        .content > .table-container {
+            grid-column: 1 / -1;
         }
 
         .chart-container {
@@ -433,6 +450,46 @@
             text-decoration: underline;
         }
 
+        .industries-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 10px;
+        }
+
+        .industry-bar-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .industry-name {
+            color: #ccc;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .industry-bar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .industry-bar {
+            background: #4a90e2;
+            height: 20px;
+            border-radius: 2px;
+            min-width: 10px;
+        }
+
+        .industry-count {
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: right;
+        }
+
         .full-width {
             grid-column: 1 / -1;
         }
@@ -616,7 +673,7 @@
             return (
                 <div className="dashboard">
                     <div className="top-bar">
-                        <h1>UK Visa Sponsor Register</h1>
+                        <h1>UK Tier 2 Visa Sponsors</h1>
                         <div className="top-bar-search">
                             <button onClick={resetFilters}>Reset Filters</button>
                         </div>
@@ -637,7 +694,7 @@
                                 </div>
                             </div>
 
-                            <div className="filter-card">
+                            <div className="filter-card region-card">
                                 <h3>Region</h3>
                                 <input type="text" className="filter-input" placeholder="Search region..." value={filters.searchRegion} onChange={(e) => setFilters({...filters, searchRegion: e.target.value})} />
                                 <div className="checkbox-group">
