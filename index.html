@@ -47,15 +47,6 @@
             gap: 10px;
         }
 
-        .top-bar-search input {
-            padding: 8px 12px;
-            background: #ffffff;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            width: 200px;
-            color: #000;
-        }
-
         .top-bar-search button {
             padding: 8px 15px;
             background: #4a90e2;
@@ -82,6 +73,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            max-height: calc(100vh - 120px);
         }
 
         .filter-card {
@@ -89,6 +81,19 @@
             border: 1px solid #333;
             border-radius: 3px;
             padding: 12px;
+            flex-shrink: 0;
+        }
+
+        .filter-card.industry-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 300px;
+        }
+
+        .filter-card.industry-card .checkbox-group {
+            flex: 1;
+            max-height: none;
         }
 
         .filter-card h3 {
@@ -281,13 +286,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 15px;
             margin-bottom: 10px;
+            flex-wrap: wrap;
         }
 
         .table-header h2 {
             font-size: 0.9rem;
             font-weight: 700;
             color: #fff;
+        }
+
+        .table-search {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .table-search input {
+            flex: 1;
+            padding: 6px 10px;
+            background: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: #000;
+            font-size: 0.8rem;
         }
 
         .table-nav {
@@ -388,6 +412,25 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+            padding: 15px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 0.8rem;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
 
         .full-width {
@@ -575,12 +618,6 @@
                     <div className="top-bar">
                         <h1>UK Visa Sponsor Register</h1>
                         <div className="top-bar-search">
-                            <input
-                                type="text"
-                                placeholder="Enter Organisation Name"
-                                value={filters.searchOrg}
-                                onChange={(e) => setFilters({...filters, searchOrg: e.target.value})}
-                            />
                             <button onClick={resetFilters}>Reset Filters</button>
                         </div>
                     </div>
@@ -619,7 +656,7 @@
                                 </div>
                             </div>
 
-                            <div className="filter-card">
+                            <div className="filter-card industry-card">
                                 <h3>Industry</h3>
                                 <input type="text" className="filter-input" placeholder="Search industry..." value={filters.searchIndustry} onChange={(e) => setFilters({...filters, searchIndustry: e.target.value})} />
                                 <div className="checkbox-group">
@@ -695,6 +732,14 @@
                             <div className="table-container full-width">
                                 <div className="table-header">
                                     <h2>Organisation Name (Showing {startIdx + 1}-{Math.min(startIdx + itemsPerPage, processedData.length)} of {processedData.length.toLocaleString()})</h2>
+                                    <div className="table-search">
+                                        <input
+                                            type="text"
+                                            placeholder="Search organisation name..."
+                                            value={filters.searchOrg}
+                                            onChange={(e) => setFilters({...filters, searchOrg: e.target.value})}
+                                        />
+                                    </div>
                                     <div className="table-nav">
                                         <button className="nav-btn" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>⏮ First</button>
                                         <button className="nav-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀ Prev</button>
@@ -727,6 +772,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="footer">
+                        Created by <strong>Anjaney Singh</strong> with <strong>Claude</strong> | Data sources: <a href="https://uktiersponsors.co.uk/" target="_blank">UK Tier Sponsors</a>, <a href="https://geoportal.statistics.gov.uk/" target="_blank">ONS Geoportal</a>
                     </div>
                 </div>
             );
