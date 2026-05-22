@@ -78,7 +78,7 @@
         }
 
         .sidebar {
-            width: 220px;
+            width: 280px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -128,7 +128,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            max-height: 120px;
+            max-height: 200px;
             overflow-y: auto;
             font-size: 0.8rem;
         }
@@ -329,6 +329,8 @@
             border: 1px solid #333;
             border-radius: 3px;
             background: #0a0a0a;
+            max-height: 550px;
+            min-height: 450px;
         }
 
         .data-table {
@@ -357,6 +359,10 @@
             padding: 6px 8px;
             border-bottom: 1px solid #333;
             color: #ccc;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .data-table tbody tr:hover {
@@ -426,6 +432,7 @@
             const [filters, setFilters] = useState({
                 searchOrg: '',
                 searchIndustry: '',
+                searchRegion: '',
                 regions: [],
                 industries: [],
                 years: [],
@@ -549,6 +556,7 @@
                 setFilters({
                     searchOrg: '',
                     searchIndustry: '',
+                    searchRegion: '',
                     regions: [],
                     industries: [],
                     years: [],
@@ -594,8 +602,9 @@
 
                             <div className="filter-card">
                                 <h3>Region</h3>
+                                <input type="text" className="filter-input" placeholder="Search region..." value={filters.searchRegion} onChange={(e) => setFilters({...filters, searchRegion: e.target.value})} />
                                 <div className="checkbox-group">
-                                    {uniqueRegions.map(region => (
+                                    {uniqueRegions.filter(reg => reg.toLowerCase().includes(filters.searchRegion.toLowerCase())).map(region => (
                                         <div key={region} className="checkbox-item">
                                             <input type="checkbox" checked={filters.regions.includes(region)} onChange={(e) => {
                                                 if (e.target.checked) {
@@ -614,7 +623,7 @@
                                 <h3>Industry</h3>
                                 <input type="text" className="filter-input" placeholder="Search industry..." value={filters.searchIndustry} onChange={(e) => setFilters({...filters, searchIndustry: e.target.value})} />
                                 <div className="checkbox-group">
-                                    {uniqueIndustries.filter(ind => ind.toLowerCase().includes(filters.searchIndustry.toLowerCase())).slice(0, 8).map(industry => (
+                                    {uniqueIndustries.filter(ind => ind.toLowerCase().includes(filters.searchIndustry.toLowerCase())).map(industry => (
                                         <div key={industry} className="checkbox-item">
                                             <input type="checkbox" checked={filters.industries.includes(industry)} onChange={(e) => {
                                                 if (e.target.checked) {
