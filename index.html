@@ -991,7 +991,7 @@
                             </div>
 
                             <div className="chart-container">
-                                <h2>Top Growth Industries ({Math.max(...processedData.map(r => r.year), 2013) - 1}-{Math.max(...processedData.map(r => r.year), 2013)})</h2>
+                                <h2>Top Growth Industries ({processedData.length > 0 ? Math.max(...processedData.map(r => r.year), 2013) - 1 : 2013}-{processedData.length > 0 ? Math.max(...processedData.map(r => r.year), 2013) : 2013})</h2>
                                 <div className="chart-wrapper" style={{flexDirection: 'column', padding: '5px', justifyContent: 'flex-start'}}>
                                     {growthIndustries.map((ind, i) => {
                                         const maxCount = growthIndustries[0]?.count || 1;
@@ -1077,7 +1077,7 @@
                     </div>
 
                     <div className="footer">
-                        Developed & Designed by <strong>Anjaney Singh</strong> using <strong>Claude AI</strong> | Data sources: <a href="https://uktiersponsors.co.uk/" target="_blank">UK Tier Sponsors</a>, <a href="https://geoportal.statistics.gov.uk/" target="_blank">ONS Geoportal</a>
+                        Designed and Created by <strong>Anjaney Singh</strong> using <strong>Claude AI</strong> | Data sources: <a href="https://uktiersponsors.co.uk/" target="_blank">UK Tier Sponsors</a>, <a href="https://geoportal.statistics.gov.uk/" target="_blank">ONS Geoportal</a>
                     </div>
                 </div>
             );
