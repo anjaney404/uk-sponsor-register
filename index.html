@@ -252,7 +252,7 @@
         }
 
         .region-bar-fill {
-            flex: 1;
+            flex: 0 0 auto;
             background: #4a90e2;
             height: 24px;
             border-radius: 3px;
@@ -823,17 +823,15 @@
                 return Object.values(grouped).sort((a, b) => b.count - a.count);
             }, [processedData]);
 
-            // Tier Distribution (Main Tier only - no Sub Tier)
-            const tierData = useMemo(() => {
-                const mainTier = processedData.filter(r => r['Main Tier'] && r['Main Tier'].trim()).length;
-                return { mainTier, other: processedData.length - mainTier, total: processedData.length };
-            }, [processedData]);
-
-            // Top Growth Industries (2025-2026)
+            // Top Growth Industries (most recent in filtered data)
             const growthIndustries = useMemo(() => {
-                const recent = processedData.filter(r => r.year >= 2025);
+                if (processedData.length === 0) return [];
+                // Get the most recent year in filtered data
+                const maxYear = Math.max(...processedData.map(r => r.year));
+                // Show industries from last 2 years of filtered data
+                const recentYears = processedData.filter(r => r.year >= maxYear - 1);
                 const grouped = {};
-                recent.forEach(row => {
+                recentYears.forEach(row => {
                     grouped[row.Industry] = (grouped[row.Industry] || 0) + 1;
                 });
                 return Object.entries(grouped).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([ind, count]) => ({
@@ -967,15 +965,15 @@
                                 <h2>Sponsors by Region</h2>
                                 <div className="region-bars">
                                     {regionData.map(region => {
-                                        const maxCount = regionData[0]?.count || 1;
-                                        const width = (region.count / maxCount) * 100;
+                                        const maxCount = Math.max(...regionData.map(r => r.count), 1);
+                                        const percentage = (region.count / maxCount) * 100;
                                         const isSelected = filters.regions.includes(region.region);
                                         return (
                                             <div key={region.region} className="region-bar">
                                                 <div className="region-bar-label">{region.region}</div>
                                                 <div 
                                                     className={`region-bar-fill ${isSelected ? 'selected' : ''}`}
-                                                    style={{width: `${width}%`}}
+                                                    style={{width: `${percentage}%`, minWidth: '40px'}}
                                                     onClick={() => {
                                                         if (filters.regions.includes(region.region)) {
                                                             setFilters({...filters, regions: filters.regions.filter(r => r !== region.region)});
@@ -993,30 +991,7 @@
                             </div>
 
                             <div className="chart-container">
-                                <h2>Main Tier Distribution</h2>
-                                <div className="pie-chart">
-                                    <svg viewBox="0 0 200 150" style={{width: '100%', maxWidth: '150px'}}>
-                                        <circle cx="75" cy="75" r="50" fill="#4a90e2" />
-                                        <circle cx="75" cy="75" r="40" fill="#0a0a0a" />
-                                        <text x="75" y="75" textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize="20" fontWeight="bold">
-                                            {Math.round((tierData.mainTier / tierData.total) * 100)}%
-                                        </text>
-                                    </svg>
-                                    <div className="pie-legend">
-                                        <div className="legend-item">
-                                            <div className="legend-color" style={{background: '#4a90e2'}}></div>
-                                            <span>Main Tier: {tierData.mainTier}</span>
-                                        </div>
-                                        <div className="legend-item">
-                                            <div className="legend-color" style={{background: '#666'}}></div>
-                                            <span>Others: {tierData.other}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="chart-container">
-                                <h2>Top Growth Industries (2025-2026)</h2>
+                                <h2>Top Growth Industries ({Math.max(...processedData.map(r => r.year), 2013) - 1}-{Math.max(...processedData.map(r => r.year), 2013)})</h2>
                                 <div className="chart-wrapper" style={{flexDirection: 'column', padding: '5px', justifyContent: 'flex-start'}}>
                                     {growthIndustries.map((ind, i) => {
                                         const maxCount = growthIndustries[0]?.count || 1;
@@ -1102,7 +1077,7 @@
                     </div>
 
                     <div className="footer">
-                        Designed & Developed by <strong>Anjaney Singh</strong> using <strong>Claude AI</strong> | Data sources: <a href="https://uktiersponsors.co.uk/" target="_blank">UK Tier Sponsors</a>, <a href="https://geoportal.statistics.gov.uk/" target="_blank">ONS Geoportal</a>
+                        Developed & Designed by <strong>Anjaney Singh</strong> using <strong>Claude AI</strong> | Data sources: <a href="https://uktiersponsors.co.uk/" target="_blank">UK Tier Sponsors</a>, <a href="https://geoportal.statistics.gov.uk/" target="_blank">ONS Geoportal</a>
                     </div>
                 </div>
             );
